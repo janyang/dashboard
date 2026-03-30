@@ -618,7 +618,7 @@
 <!-- AUTH SCREEN -->
 <div class="auth-screen" id="auth-screen">
   <div class="auth-card">
-    <div class="auth-logo">故事工廠</div>
+    <div class="auth-logo">故事 StoryStudio</div>
     <div class="auth-sub">Sales Dashboard 2026</div>
     <div class="auth-divider"></div>
     <div class="auth-desc">請使用公司 Google 帳號登入<br>以存取業務數據儀表板</div>
@@ -803,25 +803,8 @@
             </div>
           </div>
           <div style="border-top:1px solid var(--border);margin-top:1rem;padding-top:.9rem;">
-            <div class="section-title" style="margin-bottom:.6rem">高潛力大案（>100萬）</div>
-            <div style="display:flex;flex-direction:column;gap:6px;font-size:0.78rem;">
-              <div style="display:flex;justify-content:space-between;align-items:center;">
-                <span style="color:var(--ink-2)">台北古蹟日</span>
-                <span style="font-family:var(--serif);font-weight:700;color:var(--warn)">450萬</span>
-              </div>
-              <div style="display:flex;justify-content:space-between;align-items:center;">
-                <span style="color:var(--ink-2)">觀光協會日文刊 ×2</span>
-                <span style="font-family:var(--serif);font-weight:700;color:var(--warn)">700萬</span>
-              </div>
-              <div style="display:flex;justify-content:space-between;align-items:center;">
-                <span style="color:var(--ink-2)">ICERD宣導</span>
-                <span style="font-family:var(--serif);font-weight:700;color:var(--warn)">200萬</span>
-              </div>
-              <div style="display:flex;justify-content:space-between;align-items:center;">
-                <span style="color:var(--ink-2)">漫想誌季刊</span>
-                <span style="font-family:var(--serif);font-weight:700;color:var(--warn)">250萬</span>
-              </div>
-            </div>
+            <div class="section-title" style="margin-bottom:.6rem">高潛力大案（&gt;100萬）</div>
+            <div id="big-deals" style="display:flex;flex-direction:column;gap:6px;font-size:0.78rem;"></div>
           </div>
         </div>
       </div>
@@ -1292,7 +1275,21 @@ function updateKPIs() {
   // Deal count
   document.getElementById('deal-count').textContent = `共 ${deals.length} 件`;
 
-  // Rep distribution
+  // Big deals (>100萬, 洽談中, sorted by amount)
+  const bigDeals = talking
+    .filter(d => d.amt >= 1000000)
+    .sort((a, b) => b.amt - a.amt)
+    .slice(0, 5);
+  const bigDealsEl = document.getElementById('big-deals');
+  if (bigDealsEl) {
+    bigDealsEl.innerHTML = bigDeals.length
+      ? bigDeals.map(d => `
+        <div style="display:flex;justify-content:space-between;align-items:center;">
+          <span style="color:var(--ink-2);flex:1;margin-right:8px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${d.name}</span>
+          <span style="font-family:var(--serif);font-weight:700;color:var(--warn);flex-shrink:0">${fmtAmt(d.amt)}</span>
+        </div>`).join('')
+      : '<span style="color:var(--ink-3)">暫無百萬以上洽談案</span>';
+  }
   const lCount = deals.filter(d => d.rep === 'L').length;
   const yCount = deals.filter(d => d.rep === 'Y').length;
   const total  = lCount + yCount || 1;
