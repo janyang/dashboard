@@ -631,13 +631,13 @@
   <!-- SIDEBAR -->
   <aside class="sidebar">
     <div>
-      <div class="logo">故事工廠<br>業務儀表板<span>SALES DASHBOARD</span></div>
+      <div class="logo">故事 StoryStudio<br>業務儀表板<span>SALES DASHBOARD</span></div>
     </div>
     <nav>
       <div class="nav-section">
         <div class="nav-label">導覽</div>
         <button class="nav-item active" onclick="switchView('pipeline')">
-          <div class="nav-dot" style="background:#4caf50"></div> 當前案件管線
+          <div class="nav-dot" style="background:#4caf50"></div> 當前案件進度
         </button>
         <button class="nav-item" onclick="switchView('yoy')">
           <div class="nav-dot" style="background:#ff9800"></div> 歷年同月比較
@@ -664,7 +664,7 @@
   <main class="main">
     <div class="topbar">
       <div class="topbar-left">
-        <div class="page-title" id="page-title">當前案件管線</div>
+        <div class="page-title" id="page-title">當前案件進度</div>
         <div class="page-sub" id="page-sub">2026 年度 · 更新至 2026 Q1</div>
       </div>
       <div class="topbar-right" id="topbar-filters">
@@ -1214,10 +1214,7 @@ async function loadData() {
 
 async function fetchSheet(sheetName) {
   const url = `${CONFIG.APPS_SCRIPT_URL}?sheet=${encodeURIComponent(sheetName)}`;
-  const res = await fetch(url, {
-    method: 'GET',
-    headers: { 'Authorization': 'Bearer ' + accessToken },
-  });
+  const res = await fetch(url, { redirect: 'follow' });
   if (!res.ok) throw new Error(`HTTP ${res.status}`);
   const json = await res.json();
   if (json.error) throw new Error(json.error);
@@ -1376,7 +1373,7 @@ function switchView(view) {
   event.currentTarget.classList.add('active');
 
   const titles = {
-    pipeline: ['當前案件管線', '2026 年度 · 更新至 2026 Q1'],
+    pipeline: ['當前案件進度', '2026 年度 · 更新至 2026 Q1'],
     yoy: ['歷年同月比較', '三月份對比 · 2024 vs 2025 vs 2026']
   };
   document.getElementById('page-title').textContent = titles[view][0];
